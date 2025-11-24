@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TimeManager Test Runner</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            background: #1e1e1e;
+            color: #d4d4d4;
+        }
+        .test-result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .pass {
+            background: #1e3a1e;
+            color: #4ec94e;
+        }
+        .fail {
+            background: #3a1e1e;
+            color: #e74c3c;
+        }
+        h2 {
+            color: #569cd6;
+        }
+    </style>
+</head>
+<body>
+    <h1>TimeManager Test Results</h1>
+    <div id="results"></div>
+
+    <script src="timeManager.js"></script>
+    <script>
+        const results = document.getElementById('results');
+        const timeManager = new TimeManager();
+        let passCount = 0;
+        let failCount = 0;
+
+        function log(message, passed) {
+            const div = document.createElement('div');
+            div.className = `test-result ${passed ? 'pass' : 'fail'}`;
+            div.textContent = `${passed ? '✓' : '✗'} ${message}`;
+            results.appendChild(div);
+            if (passed) passCount++;
+            else failCount++;
+        }
+
+        function assert(condition, message) {
+            if (!condition) {
+                throw new Error(message);
+            }
+        }
+
+        // Test midnight 24-hour
+        try {
+            const time = { hours: 0, minutes: 0, seconds: 0, date: new Date() };
+            const formatted = timeManager.format24Hour(time);
+            assert(formatted === '00:00:00', `Expected '00:00:00', got '${formatted}'`);
+            log('Midnight 24-hour format: 00:00:00', true);
+        } catch (e) {
+            log(`Midnight 24-hour format: ${e.message}`, false);
+        }
+
+        // Test midnight 12-hour
+        try {
+            const time = { hours: 0, minutes: 0, seconds: 0, date: new Date() };
+            const formatted = timeManager.format12Hour(time);
+            assert(formatted === '12:00:00 AM', `Expected '12:00:00 AM', got '${formatted}'`);
+            log('Midnight 12-hour format: 12:00:00 AM', true);
+        } catch (e) {
+            log(`Midnight 12-hour format: ${e.message}`, false);
+        }
+
+        // Test noon 24-hour
+        try {
+            const time = { hours: 12, minutes: 0, seconds: 0, date: new Date() };
+            const formatted = timeManager.format24Hour(time);
+            assert(formatted === '12:00:00', `Expected '12:00:00', got '${formatted}'`);
+            log('Noon 24-hour format: 12:00:00', true);
+        } catch (e) {
+            log(`Noon 24-hour format: ${e.message}`, false);
+        }
+
+        // Test noon 12-hour
+        try {
+            const time = { hours: 12, minutes: 0, seconds: 0, date: new Date() };
+            const formatted = timeManager.format12Hour(time);
+            assert(formatted === '12:00:00 PM', `Expected '12:00:00 PM', got '${formatted}'`);
+            log('Noon 12-hour format: 12:00:00 PM', true);
+        } catch (e) {
+            log(`Noon 12-hour format: ${e.message}`, false);
+        }
+
+        // Test 23:59:59 24-hour
+        try {
+            const time = { hours: 23, minutes: 59, seconds: 59, date: new Date() };
+            const formatted = timeManager.format24Hour(time);
+            assert(formatted === '23:59:59', `Expected '23:59:59', got '${formatted}'`);
+            log('Boundary 23:59:59 24-hour format', true);
+        } catch (e) {
+            log(`Boundary 23:59:59 24-hour format: ${e.message}`, false);
+        }
+
+        // Test 23:59:59 12-hour
+        try {
+            const time = { hours: 23, minutes: 59, seconds: 59, date: new Date() };
+            const formatted = timeManager.format12Hour(time);
+            assert(formatted === '11:59:59 PM', `Expected '11:59:59 PM', got '${formatted}'`);
+            log('Boundary 23:59:59 12-hour format', true);
+        } catch (e) {
+            log(`Boundary 23:59:59 12-hour format: ${e.message}`, false);
+        }
+
+        // Test leading zeros
+        try {
+            const time = { hours: 5, minutes: 3, seconds: 7, date: new Date() };
+            const formatted = timeManager.format24Hour(time);
+            assert(formatted === '05:03:07', `Expected '05:03:07', got '${formatted}'`);
+            log('Leading zeros in 24-hour format', true);
+        } catch (e) {
+            log(`Leading zeros in 24-hour format: ${e.message}`, false);
+        }
+
+        // Test AM/PM indicator
+        try {
+            const time1 = { hours: 5, minutes: 0, seconds: 0, date: new Date() };
+            const formatted1 = timeManager.format12Hour(time1);
+            assert(formatted1.includes('AM'), `Expected AM in '${formatted1}'`);
+            
+            const time2 = { hours: 17, minutes: 0, seconds: 0, date: new Date() };
+            const formatted2 = timeManager.format12Hour(time2);
+            assert(formatted2.includes('PM'), `Expected PM in '${formatted2}'`);
+            log('AM/PM indicator present', true);
+        } catch (e) {
+            log(`AM/PM indicator: ${e.message}`, false);
+        }
+
+        // Test date formatting
+        try {
+            const date = new Date(2024, 0, 5); // Jan 5, 2024
+            const formatted = timeManager.formatDate(date);
+            assert(formatted === '2024-01-05', `Expected '2024-01-05', got '${formatted}'`);
+            log('Date formatting with all components', true);
+        } catch (e) {
+            log(`Date formatting: ${e.message}`, false);
+        }
+
+        // Test round-trip conversion
+        try {
+            const time = { hours: 15, minutes: 30, seconds: 45, date: new Date() };
+            const format24 = timeManager.format24Hour(time);
+            const format12 = timeManager.format12Hour(time);
+            
+            // Parse 24-hour
+            const [h24, m24, s24] = format24.split(':').map(s => parseInt(s, 10));
+            
+            // Parse 12-hour
+            const [timePart, ampm] = format12.split(' ');
+            const [h12, m12, s12] = timePart.split(':').map(s => parseInt(s, 10));
+            let h12to24 = h12;
+            if (ampm === 'PM' && h12 !== 12) h12to24 = h12 + 12;
+            
+            assert(h24 === 15 && m24 === 30 && s24 === 45, 'Format 24 parsing failed');
+            assert(h12to24 === 15 && m12 === 30 && s12 === 45, 'Format 12 parsing failed');
+            log('Round-trip format conversion preserves time', true);
+        } catch (e) {
+            log(`Round-trip conversion: ${e.message}`, false);
+        }
+
+        // Summary
+        const summary = document.createElement('h2');
+        summary.textContent = `\nSummary: ${passCount} passed, ${failCount} failed`;
+        summary.style.color = failCount === 0 ? '#4ec94e' : '#e74c3c';
+        results.appendChild(summary);
+    </script>
+</body>
+</html>

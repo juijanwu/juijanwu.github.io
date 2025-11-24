@@ -1,0 +1,196 @@
+/* CSS Variables for theming */
+:root {
+  --bg-color: #1a1a2e;
+  --text-color: #eee;
+  --time-color: #00d9ff;
+  --date-color: #a8dadc;
+  --button-bg: #16213e;
+  --button-hover: #0f3460;
+  --button-text: #00d9ff;
+  --indicator-color: #f1faee;
+}
+
+/* Reset and base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, var(--bg-color) 0%, #0f3460 100%);
+  color: var(--text-color);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+/* Main container */
+.clock-container {
+  text-align: center;
+  max-width: 800px;
+  width: 100%;
+}
+
+/* Clock display area */
+.clock-display {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 60px 40px;
+  margin-bottom: 30px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Time display */
+.time-display {
+  margin-bottom: 20px;
+}
+
+.time-display time {
+  font-size: 6rem;
+  font-weight: 700;
+  color: var(--time-color);
+  letter-spacing: 0.05em;
+  text-shadow: 0 0 20px rgba(0, 217, 255, 0.5);
+  display: block;
+  line-height: 1.2;
+}
+
+/* Date display */
+.date-display {
+  margin-top: 20px;
+}
+
+.date-display time {
+  font-size: 2rem;
+  font-weight: 400;
+  color: var(--date-color);
+  letter-spacing: 0.1em;
+}
+
+/* Controls section */
+.controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Format toggle button */
+.format-toggle-btn {
+  background: var(--button-bg);
+  color: var(--button-text);
+  border: 2px solid var(--button-text);
+  padding: 15px 40px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.format-toggle-btn:hover {
+  background: var(--button-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 217, 255, 0.3);
+}
+
+.format-toggle-btn:active {
+  transform: translateY(0);
+}
+
+.format-toggle-btn:focus {
+  outline: 3px solid var(--button-text);
+  outline-offset: 3px;
+}
+
+/* Format indicator */
+.format-indicator {
+  font-size: 1rem;
+  color: var(--indicator-color);
+  opacity: 0.8;
+  font-weight: 500;
+}
+
+/* Responsive design - Tablet */
+@media (max-width: 768px) {
+  .clock-display {
+    padding: 40px 30px;
+  }
+
+  .time-display time {
+    font-size: 4.5rem;
+  }
+
+  .date-display time {
+    font-size: 1.5rem;
+  }
+
+  .format-toggle-btn {
+    padding: 12px 30px;
+    font-size: 1rem;
+  }
+}
+
+/* Responsive design - Mobile */
+@media (max-width: 480px) {
+  body {
+    padding: 15px;
+  }
+
+  .clock-display {
+    padding: 30px 20px;
+    border-radius: 15px;
+  }
+
+  .time-display time {
+    font-size: 3rem;
+  }
+
+  .date-display time {
+    font-size: 1.2rem;
+  }
+
+  .format-toggle-btn {
+    padding: 10px 25px;
+    font-size: 0.9rem;
+  }
+
+  .format-indicator {
+    font-size: 0.9rem;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --bg-color: #000;
+    --text-color: #fff;
+    --time-color: #0ff;
+    --button-bg: #000;
+    --button-text: #0ff;
+  }
+
+  .clock-display {
+    border: 2px solid var(--text-color);
+  }
+
+  .format-toggle-btn {
+    border-width: 3px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

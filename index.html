@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="網頁時鐘 - 顯示當前時間和日期">
+    <title>網頁時鐘</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <main class="clock-container" role="main">
+        <div class="clock-display">
+            <!-- Time Display Container -->
+            <div class="time-display" id="timeDisplay" role="timer" aria-live="polite" aria-atomic="true">
+                <time id="timeValue" aria-label="當前時間">--:--:--</time>
+            </div>
+
+            <!-- Date Display Container -->
+            <div class="date-display" id="dateDisplay">
+                <time id="dateValue" datetime="" aria-label="當前日期">----------</time>
+            </div>
+        </div>
+
+        <!-- Format Toggle Controls -->
+        <div class="controls" role="group" aria-label="時鐘控制">
+            <button 
+                id="formatToggle" 
+                class="format-toggle-btn"
+                aria-label="切換時間格式，當前為24小時制"
+                aria-pressed="false"
+                type="button">
+                切換 12/24 小時制
+            </button>
+            <div class="format-indicator" id="formatIndicator" aria-live="polite" role="status">
+                24小時制
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="timeManager.js"></script>
+    <script src="displayController.js"></script>
+    <script src="clockEngine.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
